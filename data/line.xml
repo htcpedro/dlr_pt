@@ -1,0 +1,448 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version="0.6" generator="Osmosis 0.49.2">
+  <bounds minlon="-7.90880" minlat="39.52050" maxlon="-7.70760" maxlat="39.82540" origin="Overpass API 0.7.62.8 e802775f"/>
+  <node id="3667864868" version="2" timestamp="2016-03-08T07:28:08Z" uid="42429" user="42429" changeset="37680551" lat="39.6544104" lon="-7.7761496">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864870" version="2" timestamp="2016-03-08T07:28:08Z" uid="42429" user="42429" changeset="37680551" lat="39.5739286" lon="-7.7486159">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864871" version="3" timestamp="2024-11-28T20:23:26Z" uid="15324596" user="dmfr" changeset="159718565" lat="39.5913025" lon="-7.7485566">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864872" version="2" timestamp="2016-03-08T07:28:08Z" uid="42429" user="42429" changeset="37680551" lat="39.6831953" lon="-7.8241433">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864873" version="2" timestamp="2016-03-08T07:28:08Z" uid="42429" user="42429" changeset="37680551" lat="39.726351" lon="-7.8499408">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864875" version="2" timestamp="2016-03-08T07:28:08Z" uid="42429" user="42429" changeset="37680551" lat="39.5714559" lon="-7.7490129">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864877" version="2" timestamp="2016-03-08T07:28:08Z" uid="42429" user="42429" changeset="37680551" lat="39.6036522" lon="-7.7511908">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864879" version="2" timestamp="2016-03-08T07:28:08Z" uid="42429" user="42429" changeset="37680551" lat="39.749543" lon="-7.8679759">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864881" version="2" timestamp="2016-03-08T07:28:08Z" uid="42429" user="42429" changeset="37680551" lat="39.6874013" lon="-7.8288711">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864883" version="2" timestamp="2016-03-08T07:28:08Z" uid="42429" user="42429" changeset="37680551" lat="39.6888784" lon="-7.8305214">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864885" version="2" timestamp="2016-03-08T07:28:08Z" uid="42429" user="42429" changeset="37680551" lat="39.7392113" lon="-7.8560579">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864886" version="2" timestamp="2016-03-08T07:28:09Z" uid="42429" user="42429" changeset="37680551" lat="39.7296715" lon="-7.851525">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864887" version="2" timestamp="2016-03-08T07:28:09Z" uid="42429" user="42429" changeset="37680551" lat="39.6160429" lon="-7.7571239">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864891" version="2" timestamp="2016-03-08T07:28:09Z" uid="42429" user="42429" changeset="37680551" lat="39.5988053" lon="-7.7491738">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864892" version="2" timestamp="2016-03-08T07:28:09Z" uid="42429" user="42429" changeset="37680551" lat="39.6995589" lon="-7.8425289">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864893" version="2" timestamp="2016-03-08T07:28:09Z" uid="42429" user="42429" changeset="37680551" lat="39.7168032" lon="-7.8454078">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864895" version="2" timestamp="2016-03-08T07:28:09Z" uid="42429" user="42429" changeset="37680551" lat="39.6190175" lon="-7.7581967">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864897" version="2" timestamp="2016-03-08T07:28:09Z" uid="42429" user="42429" changeset="37680551" lat="39.7483386" lon="-7.8639436">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864898" version="2" timestamp="2016-03-08T07:28:09Z" uid="42429" user="42429" changeset="37680551" lat="39.596237" lon="-7.7481224">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864899" version="2" timestamp="2016-03-08T07:28:09Z" uid="42429" user="42429" changeset="37680551" lat="39.6849243" lon="-7.8260816">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864900" version="2" timestamp="2016-03-08T07:28:09Z" uid="42429" user="42429" changeset="37680551" lat="39.659875" lon="-7.7919692">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864903" version="2" timestamp="2016-03-08T07:28:09Z" uid="42429" user="42429" changeset="37680551" lat="39.6335978" lon="-7.7634896">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864904" version="2" timestamp="2016-03-08T07:28:09Z" uid="42429" user="42429" changeset="37680551" lat="39.702338" lon="-7.8428866">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864906" version="2" timestamp="2016-03-08T07:28:09Z" uid="42429" user="42429" changeset="37680551" lat="39.6748258" lon="-7.8147931">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864908" version="2" timestamp="2016-03-08T07:28:09Z" uid="42429" user="42429" changeset="37680551" lat="39.6311515" lon="-7.7626098">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864909" version="2" timestamp="2016-03-08T07:28:09Z" uid="42429" user="42429" changeset="37680551" lat="39.6806941" lon="-7.8213287">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864910" version="2" timestamp="2016-03-08T07:28:09Z" uid="42429" user="42429" changeset="37680551" lat="39.6950338" lon="-7.8374417">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864911" version="2" timestamp="2016-03-08T07:28:09Z" uid="42429" user="42429" changeset="37680551" lat="39.7524602" lon="-7.8776587">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864916" version="2" timestamp="2016-03-08T07:28:10Z" uid="42429" user="42429" changeset="37680551" lat="39.6230752" lon="-7.7596666">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864917" version="2" timestamp="2016-03-08T07:28:10Z" uid="42429" user="42429" changeset="37680551" lat="39.6482373" lon="-7.7717795">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864918" version="2" timestamp="2016-03-08T07:28:10Z" uid="42429" user="42429" changeset="37680551" lat="39.7203029" lon="-7.8470654">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864922" version="2" timestamp="2016-03-08T07:28:10Z" uid="42429" user="42429" changeset="37680551" lat="39.7330763" lon="-7.8531397">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864923" version="2" timestamp="2016-03-08T07:28:10Z" uid="42429" user="42429" changeset="37680551" lat="39.65825" lon="-7.7847685">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667864924" version="2" timestamp="2016-03-08T07:28:10Z" uid="42429" user="42429" changeset="37680551" lat="39.6059012" lon="-7.7521454">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866025" version="2" timestamp="2016-03-08T07:28:10Z" uid="42429" user="42429" changeset="37680551" lat="39.627417" lon="-7.7612545">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866026" version="2" timestamp="2016-03-08T07:28:10Z" uid="42429" user="42429" changeset="37680551" lat="39.710297" lon="-7.8439863">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866027" version="2" timestamp="2016-03-08T07:28:10Z" uid="42429" user="42429" changeset="37680551" lat="39.6394227" lon="-7.7655996">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866028" version="2" timestamp="2016-03-08T07:28:10Z" uid="42429" user="42429" changeset="37680551" lat="39.610386" lon="-7.7543236">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866031" version="2" timestamp="2016-03-08T07:28:10Z" uid="42429" user="42429" changeset="37680551" lat="39.6677403" lon="-7.8068377">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866033" version="2" timestamp="2016-03-08T07:28:10Z" uid="42429" user="42429" changeset="37680551" lat="39.5757208" lon="-7.749052">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866034" version="2" timestamp="2016-03-08T07:28:10Z" uid="42429" user="42429" changeset="37680551" lat="39.5787171" lon="-7.7490341">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866036" version="2" timestamp="2016-03-08T07:28:10Z" uid="42429" user="42429" changeset="37680551" lat="39.6721372" lon="-7.8117729">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866037" version="2" timestamp="2016-03-08T07:28:10Z" uid="42429" user="42429" changeset="37680551" lat="39.6518334" lon="-7.7743222">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866040" version="2" timestamp="2016-03-08T07:28:10Z" uid="42429" user="42429" changeset="37680551" lat="39.60104" lon="-7.7501072">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866042" version="2" timestamp="2016-03-08T07:28:10Z" uid="42429" user="42429" changeset="37680551" lat="39.7056362" lon="-7.8433533">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866044" version="2" timestamp="2016-03-08T07:28:10Z" uid="42429" user="42429" changeset="37680551" lat="39.6136619" lon="-7.755933">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866045" version="2" timestamp="2016-03-08T07:28:10Z" uid="42429" user="42429" changeset="37680551" lat="39.6616783" lon="-7.8000302">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866046" version="2" timestamp="2016-03-08T07:28:11Z" uid="42429" user="42429" changeset="37680551" lat="39.6701133" lon="-7.8095145">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866050" version="2" timestamp="2016-03-08T07:28:11Z" uid="42429" user="42429" changeset="37680551" lat="39.643787" lon="-7.7686501">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866051" version="2" timestamp="2016-03-08T07:28:11Z" uid="42429" user="42429" changeset="37680551" lat="39.6560246" lon="-7.7797723">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866052" version="2" timestamp="2016-03-08T07:28:11Z" uid="42429" user="42429" changeset="37680551" lat="39.7432447" lon="-7.8588725">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866054" version="2" timestamp="2016-03-08T07:28:11Z" uid="42429" user="42429" changeset="37680551" lat="39.6786828" lon="-7.819081">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866055" version="2" timestamp="2016-03-08T07:28:11Z" uid="42429" user="42429" changeset="37680551" lat="39.6972833" lon="-7.8399683">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866059" version="2" timestamp="2016-03-08T07:28:11Z" uid="42429" user="42429" changeset="37680551" lat="39.646379" lon="-7.7704705">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866060" version="2" timestamp="2016-03-08T07:28:11Z" uid="42429" user="42429" changeset="37680551" lat="39.6247197" lon="-7.7602924">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866062" version="2" timestamp="2016-03-08T07:28:11Z" uid="42429" user="42429" changeset="37680551" lat="39.7238954" lon="-7.8487767">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866065" version="2" timestamp="2016-03-08T07:28:11Z" uid="42429" user="42429" changeset="37680551" lat="39.7456412" lon="-7.8612704">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866067" version="2" timestamp="2016-03-08T07:28:11Z" uid="42429" user="42429" changeset="37680551" lat="39.5854425" lon="-7.7490233">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866068" version="2" timestamp="2016-03-08T07:28:11Z" uid="42429" user="42429" changeset="37680551" lat="39.67643" lon="-7.8165795">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866070" version="2" timestamp="2016-03-08T07:28:11Z" uid="42429" user="42429" changeset="37680551" lat="39.7502826" lon="-7.8704382">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866071" version="2" timestamp="2016-03-08T07:28:11Z" uid="42429" user="42429" changeset="37680551" lat="39.6604181" lon="-7.7943993">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866072" version="2" timestamp="2016-03-08T07:28:11Z" uid="42429" user="42429" changeset="37680551" lat="39.663467" lon="-7.8020472">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866074" version="2" timestamp="2016-03-08T07:28:11Z" uid="42429" user="42429" changeset="37680551" lat="39.6363961" lon="-7.7644838">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866079" version="2" timestamp="2016-03-08T07:28:12Z" uid="42429" user="42429" changeset="37680551" lat="39.6654278" lon="-7.8042591">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866080" version="2" timestamp="2016-03-08T07:28:12Z" uid="42429" user="42429" changeset="37680551" lat="39.5812251" lon="-7.7490772">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866082" version="2" timestamp="2016-03-08T07:28:12Z" uid="42429" user="42429" changeset="37680551" lat="39.7151994" lon="-7.8446461">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866083" version="2" timestamp="2016-03-08T07:28:12Z" uid="42429" user="42429" changeset="37680551" lat="39.7358107" lon="-7.8544433">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866086" version="2" timestamp="2016-03-08T07:28:12Z" uid="42429" user="42429" changeset="37680551" lat="39.7518554" lon="-7.8756578">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866087" version="3" timestamp="2025-09-19T12:24:18Z" uid="15324596" user="dmfr" changeset="172160070" lat="39.754352" lon="-7.8790981">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866090" version="2" timestamp="2016-03-08T07:28:12Z" uid="42429" user="42429" changeset="37680551" lat="39.7127296" lon="-7.8443152">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866091" version="2" timestamp="2016-03-08T07:28:12Z" uid="42429" user="42429" changeset="37680551" lat="39.6922695" lon="-7.8343249">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866092" version="2" timestamp="2016-03-08T07:28:12Z" uid="42429" user="42429" changeset="37680551" lat="39.6080421" lon="-7.7531719">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="3667866094" version="2" timestamp="2016-03-08T07:28:12Z" uid="42429" user="42429" changeset="37680551" lat="39.7415254" lon="-7.8571613">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="4047420426" version="1" timestamp="2016-03-08T07:27:46Z" uid="42429" user="42429" changeset="37680551" lat="39.7579109" lon="-7.8818779">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="4047420428" version="1" timestamp="2016-03-08T07:27:46Z" uid="42429" user="42429" changeset="37680551" lat="39.7596066" lon="-7.8831524">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="4047420435" version="1" timestamp="2016-03-08T07:27:46Z" uid="42429" user="42429" changeset="37680551" lat="39.7642564" lon="-7.886716">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="4047420442" version="1" timestamp="2016-03-08T07:27:46Z" uid="42429" user="42429" changeset="37680551" lat="39.7683024" lon="-7.8898011">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="4047420447" version="1" timestamp="2016-03-08T07:27:47Z" uid="42429" user="42429" changeset="37680551" lat="39.7716942" lon="-7.890233">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="4047420454" version="1" timestamp="2016-03-08T07:27:47Z" uid="42429" user="42429" changeset="37680551" lat="39.7754358" lon="-7.8907095">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="4047420459" version="1" timestamp="2016-03-08T07:27:47Z" uid="42429" user="42429" changeset="37680551" lat="39.7786197" lon="-7.891115">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="4047420462" version="1" timestamp="2016-03-08T07:27:47Z" uid="42429" user="42429" changeset="37680551" lat="39.7805356" lon="-7.891359">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="4047420464" version="1" timestamp="2016-03-08T07:27:47Z" uid="42429" user="42429" changeset="37680551" lat="39.7846644" lon="-7.8902451">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="4047420465" version="1" timestamp="2016-03-08T07:27:47Z" uid="42429" user="42429" changeset="37680551" lat="39.7874843" lon="-7.8894843">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="4047420466" version="1" timestamp="2016-03-08T07:27:47Z" uid="42429" user="42429" changeset="37680551" lat="39.7939648" lon="-7.8877357">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="4047420467" version="1" timestamp="2016-03-08T07:27:47Z" uid="42429" user="42429" changeset="37680551" lat="39.7956644" lon="-7.8872771">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="4047420468" version="1" timestamp="2016-03-08T07:27:47Z" uid="42429" user="42429" changeset="37680551" lat="39.7999326" lon="-7.8861254">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="4047420469" version="1" timestamp="2016-03-08T07:27:47Z" uid="42429" user="42429" changeset="37680551" lat="39.8022004" lon="-7.8855134">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="4047420470" version="1" timestamp="2016-03-08T07:27:47Z" uid="42429" user="42429" changeset="37680551" lat="39.8065817" lon="-7.884331">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="4929591210" version="2" timestamp="2024-02-27T20:15:47Z" uid="15324596" user="dmfr" changeset="147988624" lat="39.5689291" lon="-7.7490601">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="7044983723" version="2" timestamp="2024-03-08T23:32:24Z" uid="15324596" user="dmfr" changeset="148405225" lat="39.5666314" lon="-7.7490281">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="7044983724" version="2" timestamp="2024-03-08T23:32:24Z" uid="15324596" user="dmfr" changeset="148405225" lat="39.5639476" lon="-7.7482663">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="7044983725" version="2" timestamp="2024-03-08T23:32:24Z" uid="15324596" user="dmfr" changeset="148405225" lat="39.5610278" lon="-7.7474509">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="7044983726" version="2" timestamp="2024-03-08T23:32:24Z" uid="15324596" user="dmfr" changeset="148405225" lat="39.5583354" lon="-7.7466946">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="7044983727" version="2" timestamp="2024-03-08T23:32:24Z" uid="15324596" user="dmfr" changeset="148405225" lat="39.5548075" lon="-7.7457075">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="7044983728" version="2" timestamp="2024-03-08T23:32:24Z" uid="15324596" user="dmfr" changeset="148405225" lat="39.5529421" lon="-7.7451925">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="7044983729" version="2" timestamp="2022-12-17T10:02:42Z" uid="1193685" user="DiogoBaptista98" changeset="130181084" lat="39.5499723" lon="-7.7443718">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="7044983730" version="2" timestamp="2022-12-17T10:02:42Z" uid="1193685" user="DiogoBaptista98" changeset="130181084" lat="39.5449589" lon="-7.7451657">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="7044983731" version="2" timestamp="2022-12-17T10:02:42Z" uid="1193685" user="DiogoBaptista98" changeset="130181084" lat="39.5421624" lon="-7.7464049">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="7044983732" version="2" timestamp="2022-12-17T10:02:42Z" uid="1193685" user="DiogoBaptista98" changeset="130181084" lat="39.5384547" lon="-7.7448841">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="7044983733" version="2" timestamp="2022-12-17T10:02:42Z" uid="1193685" user="DiogoBaptista98" changeset="130181084" lat="39.5350157" lon="-7.743492">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="7044983734" version="2" timestamp="2022-12-17T10:02:42Z" uid="1193685" user="DiogoBaptista98" changeset="130181084" lat="39.5333246" lon="-7.7444535">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="7044983735" version="2" timestamp="2022-12-17T10:02:42Z" uid="1193685" user="DiogoBaptista98" changeset="130181084" lat="39.5308442" lon="-7.7450464">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="7044983736" version="3" timestamp="2022-12-17T10:02:42Z" uid="1193685" user="DiogoBaptista98" changeset="130181084" lat="39.529333" lon="-7.7433821">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="7044983737" version="3" timestamp="2022-12-17T10:02:42Z" uid="1193685" user="DiogoBaptista98" changeset="130181084" lat="39.5282355" lon="-7.7434907">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="7044983738" version="3" timestamp="2022-12-17T10:02:42Z" uid="1193685" user="DiogoBaptista98" changeset="130181084" lat="39.5272363" lon="-7.742686">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="7044983739" version="3" timestamp="2022-12-17T10:02:42Z" uid="1193685" user="DiogoBaptista98" changeset="130181084" lat="39.5271069" lon="-7.7413127">
+    <tag k="power" v="tower"/>
+  </node>
+  <node id="10269265181" version="2" timestamp="2025-08-27T19:31:28Z" uid="14235212" user="ben10dynartio" changeset="171101533" lat="39.5273921" lon="-7.7407045">
+    <tag k="power" v="insulator"/>
+  </node>
+  <node id="13016021460" version="1" timestamp="2025-07-21T19:28:20Z" uid="15324596" user="dmfr" changeset="169260955" lat="39.8070745" lon="-7.8837428">
+    <tag k="power" v="portal"/>
+  </node>
+  <way id="362486626" version="11" timestamp="2025-07-21T19:36:55Z" uid="15324596" user="dmfr" changeset="169261261">
+    <nd ref="10269265181"/>
+    <nd ref="7044983739"/>
+    <nd ref="7044983738"/>
+    <nd ref="7044983737"/>
+    <nd ref="7044983736"/>
+    <nd ref="7044983735"/>
+    <nd ref="7044983734"/>
+    <nd ref="7044983733"/>
+    <nd ref="7044983732"/>
+    <nd ref="7044983731"/>
+    <nd ref="7044983730"/>
+    <nd ref="7044983729"/>
+    <nd ref="7044983728"/>
+    <nd ref="7044983727"/>
+    <nd ref="7044983726"/>
+    <nd ref="7044983725"/>
+    <nd ref="7044983724"/>
+    <nd ref="7044983723"/>
+    <nd ref="4929591210"/>
+    <nd ref="3667864875"/>
+    <nd ref="3667864870"/>
+    <nd ref="3667866033"/>
+    <nd ref="3667866034"/>
+    <nd ref="3667866080"/>
+    <nd ref="3667866067"/>
+    <nd ref="3667864871"/>
+    <nd ref="3667864898"/>
+    <nd ref="3667864891"/>
+    <nd ref="3667866040"/>
+    <nd ref="3667864877"/>
+    <nd ref="3667864924"/>
+    <nd ref="3667866092"/>
+    <nd ref="3667866028"/>
+    <nd ref="3667866044"/>
+    <nd ref="3667864887"/>
+    <nd ref="3667864895"/>
+    <nd ref="3667864916"/>
+    <nd ref="3667866060"/>
+    <nd ref="3667866025"/>
+    <nd ref="3667864908"/>
+    <nd ref="3667864903"/>
+    <nd ref="3667866074"/>
+    <nd ref="3667866027"/>
+    <nd ref="3667866050"/>
+    <nd ref="3667866059"/>
+    <nd ref="3667864917"/>
+    <nd ref="3667866037"/>
+    <nd ref="3667864868"/>
+    <nd ref="3667866051"/>
+    <nd ref="3667864923"/>
+    <nd ref="3667864900"/>
+    <nd ref="3667866071"/>
+    <nd ref="3667866045"/>
+    <nd ref="3667866072"/>
+    <nd ref="3667866079"/>
+    <nd ref="3667866031"/>
+    <nd ref="3667866046"/>
+    <nd ref="3667866036"/>
+    <nd ref="3667864906"/>
+    <nd ref="3667866068"/>
+    <nd ref="3667866054"/>
+    <nd ref="3667864909"/>
+    <nd ref="3667864872"/>
+    <nd ref="3667864899"/>
+    <nd ref="3667864881"/>
+    <nd ref="3667864883"/>
+    <nd ref="3667866091"/>
+    <nd ref="3667864910"/>
+    <nd ref="3667866055"/>
+    <nd ref="3667864892"/>
+    <nd ref="3667864904"/>
+    <nd ref="3667866042"/>
+    <nd ref="3667866026"/>
+    <nd ref="3667866090"/>
+    <nd ref="3667866082"/>
+    <nd ref="3667864893"/>
+    <nd ref="3667864918"/>
+    <nd ref="3667866062"/>
+    <nd ref="3667864873"/>
+    <nd ref="3667864886"/>
+    <nd ref="3667864922"/>
+    <nd ref="3667866083"/>
+    <nd ref="3667864885"/>
+    <nd ref="3667866094"/>
+    <nd ref="3667866052"/>
+    <nd ref="3667866065"/>
+    <nd ref="3667864897"/>
+    <nd ref="3667864879"/>
+    <nd ref="3667866070"/>
+    <nd ref="3667866086"/>
+    <nd ref="3667864911"/>
+    <nd ref="3667866087"/>
+    <nd ref="4047420426"/>
+    <nd ref="4047420428"/>
+    <nd ref="4047420435"/>
+    <nd ref="4047420442"/>
+    <nd ref="4047420447"/>
+    <nd ref="4047420454"/>
+    <nd ref="4047420459"/>
+    <nd ref="4047420462"/>
+    <nd ref="4047420464"/>
+    <nd ref="4047420465"/>
+    <nd ref="4047420466"/>
+    <nd ref="4047420467"/>
+    <nd ref="4047420468"/>
+    <nd ref="4047420469"/>
+    <nd ref="4047420470"/>
+    <nd ref="13016021460"/>
+    <tag k="alt_name" v="Pinhal Interior - Falagueira"/>
+    <tag k="cables" v="3"/>
+    <tag k="circuits" v="1"/>
+    <tag k="frequency" v="50"/>
+    <tag k="name" v="Corgas - Falagueira"/>
+    <tag k="operator" v="REN"/>
+    <tag k="operator:wikidata" v="Q1862842"/>
+    <tag k="owner" v="GENERG"/>
+    <tag k="power" v="line"/>
+    <tag k="voltage" v="150000"/>
+  </way>
+</osm>
