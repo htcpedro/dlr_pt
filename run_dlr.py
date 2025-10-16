@@ -79,88 +79,94 @@ def get_weather_data(spans):
 
 
 def run_dlr():
-    pass
+    now_utc = pd.Timestamp.utcnow().floor('h')
+
+    # defines conductor: ACSR Drake
+    conductor_constants = ConductorConstants(
+        stranded=True, high_rs=True,
+        diameter=0.0281,
+        cross_section=None,
+        absortivity=0.6,
+        emmisivity=0.6,
+        materials_heat=[HeatMaterial(name='aluminum', mass_per_unit_length=1.116, beta=0.0, specific_heat_20deg=900),
+                        HeatMaterial(name='steel', mass_per_unit_length=0.5126, beta=0.0, specific_heat_20deg=500.4)],
+        resistance=partial(linear_resistance, temperature=[25, 75], resistence=[7.27e-05, 8.637e-05]),
+    )
+
+    ##
+    spans_dict = read_spans_data(SPANS_FILE)
+
+    spans = []
+    for i, _ in enumerate(spans_dict['mid_lo']):
+        spans.append(Span(spans_dict['mid_la'][i], spans_dict['mid_lo'][i], spans_dict['azimuth'][i],
+                          [spans_dict['start_lo'][i], spans_dict['start_la'][i]],
+                          [spans_dict['end_lo'][i], spans_dict['end_la'][i]], conductor_constants))
+
+    ##
+    weather_data = get_weather_data(spans_dict)
+
+    weather_data_lalo = np.array([[x['latitude'], x['longitude'], ] for x in weather_data])
+    weather_data_time = np.array([pd.Timestamp(x, tz='UTC') for x in weather_data[0]['hourly']['time']])
+    temperature_80m = np.array([x['hourly']['temperature_80m'] for x in weather_data])
+    wind_speed_80m = np.array([x['hourly']['wind_speed_80m'] for x in weather_data]) * 1000 / 3600
+    wind_direction_80m = np.array([x['hourly']['wind_direction_80m'] for x in weather_data])
+
+    ##
+    data_to_keep = weather_data_time >= now_utc
+    weather_data_time = weather_data_time[data_to_keep]
+    temperature_80m = temperature_80m[:, data_to_keep]
+    wind_speed_80m = wind_speed_80m[:, data_to_keep]
+    wind_direction_80m = wind_direction_80m[:, data_to_keep]
+
+    ##
+    # maps weather data to spans and computes ratings
+    ratings_span = []
+    for span in spans:
+        dist = np.sqrt((span.lat - weather_data_lalo[:, 0]) ** 2 + (span.lon - weather_data_lalo[:, 1]) ** 2)
+        idx = np.argmin(dist)
+
+        # lat, lon, elevation, time, temperature, wind_speed, wind_direction):
+        wr = WeatherRecord(spans[0].lat, spans[0].lon, 80.0, weather_data_time, temperature_80m[idx, :],
+                           wind_speed_80m[idx, :], wind_direction_80m[idx, :])
+        wr.incidence = np.mod(wind_direction_80m[idx, :] - span.azimuth, 360)
+
+        # ratings
+        nor, lte, ste = [], [], []
+        for i, _ in enumerate(wr.temperature):
+            nor.append(thermal_rating_steady_state(wr.temperature[i], wr.wind_speed[i], wr.incidence[i], 1000,
+                                                   span.conductor, RATINGS_TEMPS['nor'])[0])
+            lte.append(thermal_rating_steady_state(wr.temperature[i], wr.wind_speed[i], wr.incidence[i], 1000,
+                                                   span.conductor, RATINGS_TEMPS['lte'])[0])
+            ste.append(thermal_rating_steady_state(wr.temperature[i], wr.wind_speed[i], wr.incidence[i], 1000,
+                                                   span.conductor, RATINGS_TEMPS['ste'])[0])
+
+        nor = np.array(nor)
+        lte = np.array(lte)
+        ste = np.array(ste)
+
+        rs = RatingsSpan(span, wr)
+        rs.ratings = {'nor': nor, 'lte': lte, 'ste': ste}
+        ratings_span.append(rs)
+
+    ## prepares data output
+    ratings_line = pd.DataFrame()
+    ratings_line['time'] = wr.time
+
+    # ratings for the whole lines
+    rating_type = RATINGS_TEMPS.keys()
+    for rt in rating_type:
+        r = np.array([x.ratings[rt] for x in ratings_span])
+        mle_idx = np.nanargmin(r, axis=0)
+        mle_rating = np.nanmin(r, axis=0)
+        col_name_rating = f'{rt}'
+        col_name_mle = f'{rt}_mle'
+        ratings_line[col_name_rating] = mle_rating
+        ratings_line[col_name_mle] = mle_idx
+
+    ## writes results
+    file_name = f'./forecasts/{now_utc.strftime("%Y_%m_%d_%H")}.csv'
+    ratings_line.to_csv(file_name, index=False, float_format='%.1f')
 
 
-##
-spans_dict = read_spans_data(SPANS_FILE)
-
-##
-# defines conductor: ACSR Drake
-conductor_constants = ConductorConstants(
-    stranded=True, high_rs=True,
-    diameter=0.0281,
-    cross_section=None,
-    absortivity=0.6,
-    emmisivity=0.6,
-    materials_heat=[HeatMaterial(name='aluminum', mass_per_unit_length=1.116, beta=0.0, specific_heat_20deg=900),
-                    HeatMaterial(name='steel', mass_per_unit_length=0.5126, beta=0.0, specific_heat_20deg=500.4)],
-    resistance=partial(linear_resistance, temperature=[25, 75], resistence=[7.27e-05, 8.637e-05]),
-)
-
-##
-spans = []
-for i, _ in enumerate(spans_dict['mid_lo']):
-    spans.append(Span(spans_dict['mid_la'][i], spans_dict['mid_lo'][i], spans_dict['azimuth'][i],
-                      [spans_dict['start_lo'][i], spans_dict['start_la'][i]],
-                      [spans_dict['end_lo'][i], spans_dict['end_la'][i]], conductor_constants))
-
-##
-weather_data = get_weather_data(spans_dict)
-
-##
-weather_data_lalo = np.array([[x['latitude'], x['longitude'], ] for x in weather_data])
-weather_data_time = [pd.Timestamp(x) for x in weather_data[0]['hourly']['time']]
-temperature_80m = np.array([x['hourly']['temperature_80m'] for x in weather_data])
-wind_speed_80m = np.array([x['hourly']['wind_speed_80m'] for x in weather_data]) * 1000 / 3600
-wind_direction_80m = np.array([x['hourly']['wind_direction_80m'] for x in weather_data])
-
-##
-# maps weather data to spans and computes ratings
-ratings_span = []
-for span in spans:
-    dist = np.sqrt((span.lat - weather_data_lalo[:, 0]) ** 2 + (span.lon - weather_data_lalo[:, 1]) ** 2)
-    idx = np.argmin(dist)
-
-    # lat, lon, elevation, time, temperature, wind_speed, wind_direction):
-    wr = WeatherRecord(spans[0].lat, spans[0].lon, 80.0, weather_data_time, temperature_80m[idx, :],
-                       wind_speed_80m[idx, :], wind_direction_80m[idx, :])
-    wr.incidence = np.mod(wind_direction_80m[idx, :] - span.azimuth, 360)
-
-    # ratings
-    nor, lte, ste = [], [], []
-    for i, _ in enumerate(wr.temperature):
-        nor.append(thermal_rating_steady_state(wr.temperature[i], wr.wind_speed[i], wr.incidence[i], 1000,
-                                               span.conductor, RATINGS_TEMPS['nor'])[0])
-        lte.append(thermal_rating_steady_state(wr.temperature[i], wr.wind_speed[i], wr.incidence[i], 1000,
-                                               span.conductor, RATINGS_TEMPS['lte'])[0])
-        ste.append(thermal_rating_steady_state(wr.temperature[i], wr.wind_speed[i], wr.incidence[i], 1000,
-                                               span.conductor, RATINGS_TEMPS['ste'])[0])
-
-    nor = np.array(nor)
-    lte = np.array(lte)
-    ste = np.array(ste)
-
-    rs = RatingsSpan(span, wr)
-    rs.ratings = {'nor': nor, 'lte': lte, 'ste': ste}
-    ratings_span.append(rs)
-
-##
-ratings_line = pd.DataFrame()
-ratings_line['time'] = wr.time
-
-# ratinga for the whole line
-rating_type = RATINGS_TEMPS.keys()
-for rt in rating_type:
-    r = np.array([x.ratings[rt] for x in ratings_span])
-    mle_idx = np.nanargmin(r, axis=0)
-    mle_rating = np.nanmin(r, axis=0)
-    col_name_rating = f'{rt}'
-    col_name_mle = f'{rt}_mle'
-    ratings_line[col_name_rating] = mle_rating
-    ratings_line[col_name_mle] = mle_idx
-
-
-## writes results
-
-
+if __name__ == '__main__':
+    run_dlr()
