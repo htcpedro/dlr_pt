@@ -256,7 +256,7 @@ def power_radiation(ambient_temperature, conductor, conductor_temperature):
             np.pi
             * conductor.diameter
             * 5.6697e-8  # Stefan-Boltzmann
-            * conductor.emmisivity
+            * conductor.emissivity
             * ((conductor_temperature + 273) ** 4 - (ambient_temperature + 273) ** 4)
     )
 
@@ -268,7 +268,7 @@ def power_radiation(ambient_temperature, conductor, conductor_temperature):
 
 def power_solar(solar_irradiation, conductor):
     """Section 3.3, Eq 8, page 18."""
-    return conductor.absortivity * solar_irradiation * conductor.diameter
+    return conductor.absorptivity * solar_irradiation * conductor.diameter
 
 
 def thermal_rating_steady_state(ambient_temperature, wind_speed, angle_of_attack, solar_irradiation, conductor,

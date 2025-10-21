@@ -1,172 +1,292 @@
-import pandas as pd
+import logging
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import List, Sequence, Callable, Optional, Dict, Any
+import time
+
 import numpy as np
+import pandas as pd
 import requests
-from cigre601 import thermal_rating_steady_state, thermal_rating_unsteady_state
-from collections import namedtuple
-from functools import partial
 
-SPANS_FILE = './data/spans.csv'
+from cigre601 import thermal_rating_steady_state
 
-RATINGS_TEMPS = {'nor': 50, 'lte': 75, 'ste': 85}
+# Constants / configuration
+SPANS_FILE = Path("./data/spans.csv")
+FORECAST_DIR = Path("./forecasts")
+RATINGS_TEMPS = {"nor": 50, "lte": 75, "ste": 85}
+WEATHER_SAMPLE_STEP = 10  # sampled every 10 points
+HTTP_RETRIES = 3
+HTTP_BACKOFF = 1.0  # seconds between retries
+REQUEST_TIMEOUT = 10  # seconds
 
-ConductorConstants = namedtuple(
-    "ConductorConstants",
-    [
-        "stranded",
-        "high_rs",
-        "diameter",
-        "cross_section",
-        "absortivity",
-        "emmisivity",
-        "materials_heat",
-        "resistance",
-    ],
-)
-
-HeatMaterial = namedtuple(
-    "HeatMaterial", ["name", "mass_per_unit_length", "specific_heat_20deg", "beta"]
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+logger = logging.getLogger(__name__)
 
 
-def linear_resistance(conductor_temperature, temperature, resistence):
-    # helper linear interpolation function
-    per_1 = (resistence[1] - resistence[0]) / (temperature[1] - temperature[0])
-    resistance = resistence[0] + (conductor_temperature - temperature[0]) * per_1
-    return resistance
+@dataclass
+class HeatMaterial:
+    name: str
+    mass_per_unit_length: float
+    specific_heat_20deg: float
+    beta: float = 0.0
 
 
+@dataclass
+class ConductorConstants:
+    stranded: bool
+    high_rs: bool
+    diameter: float
+    cross_section: Optional[float]
+    absorptivity: float
+    emissivity: float
+    materials_heat: List[HeatMaterial]
+    resistance: Callable[[float], float]  # function of conductor_temperature -> resistance
+
+
+@dataclass
 class WeatherRecord:
-    def __init__(self, lat, lon, elevation, time, temperature, wind_speed, wind_direction):
-        self.lat = lat
-        self.lon = lon
-        self.elevation = elevation
-        self.time = time
-        self.temperature = temperature
-        self.wind_speed = wind_speed
-        self.wind_direction = wind_direction
-        self.incidence = None
+    lat: float
+    lon: float
+    elevation: float
+    time: pd.DatetimeIndex  # hourly time series
+    temperature: np.ndarray  # shape (n_hours,)
+    wind_speed: np.ndarray  # shape (n_hours,)
+    wind_direction: np.ndarray  # shape (n_hours,)
+    incidence: Optional[np.ndarray] = None  # shape (n_hours,)
 
 
+@dataclass
 class Span:
-    def __init__(self, lat, lon, azimuth, lola_start, lola_end, conductor):
-        self.lat = lat
-        self.lon = lon
-        self.lola_start = lola_start
-        self.lola_end = lola_end
-        self.azimuth = azimuth
-        self.conductor = conductor
+    lat: float
+    lon: float
+    azimuth: float
+    lola_start: Sequence[float]  # [lon, lat] or similar - keep original shape
+    lola_end: Sequence[float]
+    conductor: ConductorConstants
 
 
+@dataclass
 class RatingsSpan:
-    def __init__(self, span: Span, weather_record: WeatherRecord):
-        self.span = span
-        self.weather_record = weather_record
-        self.ratings = dict()
+    span: Span
+    weather_record: WeatherRecord
+    ratings: Dict[str, np.ndarray] = field(default_factory=dict)
 
 
-def read_spans_data(file_name):
-    return pd.read_csv(file_name).to_dict(orient='list')
+def linear_resistance_factory(temperature_points: Sequence[float], resistance_points: Sequence[float]):
+    """Return a function resist(T) that linearly interpolates between given points."""
+    t0, t1 = temperature_points
+    r0, r1 = resistance_points
+    slope = (r1 - r0) / (t1 - t0)
+
+    def _resist(T: float) -> float:
+        return r0 + slope * (T - t0)
+
+    return _resist
 
 
-def get_weather_data(spans):
-    weather_data = []
-    for lon, lat in zip(spans['mid_lo'][::10], spans['mid_la'][::10]):
-        url = (f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&"
-               f"hourly=temperature_80m,wind_speed_80m,wind_direction_80m")
-        weather_data.append(requests.get(url).json())
+def read_spans_data(file_path: Path) -> pd.DataFrame:
+    if not file_path.exists():
+        raise FileNotFoundError(f"Spans file not found: {file_path!s}")
+    df = pd.read_csv(file_path)
+    required_cols = {"mid_la", "mid_lo", "azimuth", "start_lo", "start_la", "end_lo", "end_la"}
+    missing = required_cols - set(df.columns)
+    if missing:
+        raise ValueError(f"Missing columns in spans CSV: {missing}")
+    return df
 
-    return weather_data
+
+def get_weather_data_for_points(points: Sequence[tuple[float, float]], sample_step: int = 1) -> List[Dict[str, Any]]:
+    """Query open-meteo for each (lat, lon). Uses simple retry logic and reuses a session.
+    Returns list of parsed JSON responses (one per unique queried point).
+    """
+    session = requests.Session()
+    outs: List[Dict[str, Any]] = []
+    for idx, (lat, lon) in enumerate(points[::sample_step]):
+        url = (
+            f"https://api.open-meteo.com/v1/forecast?"
+            f"latitude={lat}&longitude={lon}&hourly=temperature_80m,wind_speed_80m,wind_direction_80m&timezone=UTC"
+        )
+        for attempt in range(1, HTTP_RETRIES + 1):
+            try:
+                resp = session.get(url, timeout=REQUEST_TIMEOUT)
+                resp.raise_for_status()
+                data = resp.json()
+                # basic validation
+                if "hourly" not in data or not data["hourly"].get("time"):
+                    raise ValueError(f"Unexpected weather response for {lat},{lon}")
+                outs.append(data)
+                logger.debug("Fetched weather for %s,%s", lat, lon)
+                break
+            except Exception as exc:
+                logger.warning("Failed to fetch weather for %s,%s (attempt %d/%d): %s", lat, lon, attempt, HTTP_RETRIES, exc)
+                if attempt == HTTP_RETRIES:
+                    raise
+                time.sleep(HTTP_BACKOFF * attempt)
+    return outs
 
 
-def run_dlr():
-    now_utc = pd.Timestamp.utcnow().floor('h')
+def run() -> None:
+    now_utc = pd.Timestamp.utcnow().floor("h")
+    logger.info("Starting DLr run at %s", now_utc.isoformat())
 
-    # defines conductor: ACSR Drake
+    # conductor: ACSR Drake (kept same numbers as before, but fixed material order)
     conductor_constants = ConductorConstants(
-        stranded=True, high_rs=True,
+        stranded=True,
+        high_rs=True,
         diameter=0.0281,
         cross_section=None,
-        absortivity=0.6,
-        emmisivity=0.6,
-        materials_heat=[HeatMaterial(name='aluminum', mass_per_unit_length=1.116, beta=0.0, specific_heat_20deg=900),
-                        HeatMaterial(name='steel', mass_per_unit_length=0.5126, beta=0.0, specific_heat_20deg=500.4)],
-        resistance=partial(linear_resistance, temperature=[25, 75], resistence=[7.27e-05, 8.637e-05]),
+        absorptivity=0.6,
+        emissivity=0.6,
+        materials_heat=[
+            HeatMaterial(name="aluminum", mass_per_unit_length=1.116, specific_heat_20deg=900, beta=0.0),
+            HeatMaterial(name="steel", mass_per_unit_length=0.5126, specific_heat_20deg=500.4, beta=0.0),
+        ],
+        resistance=linear_resistance_factory(temperature_points=[25.0, 75.0], resistance_points=[7.27e-05, 8.637e-05]),
     )
 
-    ##
-    spans_dict = read_spans_data(SPANS_FILE)
+    # read spans
+    df_spans = read_spans_data(SPANS_FILE)
 
-    spans = []
-    for i, _ in enumerate(spans_dict['mid_lo']):
-        spans.append(Span(spans_dict['mid_la'][i], spans_dict['mid_lo'][i], spans_dict['azimuth'][i],
-                          [spans_dict['start_lo'][i], spans_dict['start_la'][i]],
-                          [spans_dict['end_lo'][i], spans_dict['end_la'][i]], conductor_constants))
+    # build Span objects
+    spans: List[Span] = []
+    for i, row in df_spans.iterrows():
+        spans.append(
+            Span(
+                lat=float(row["mid_la"]),
+                lon=float(row["mid_lo"]),
+                azimuth=float(row["azimuth"]),
+                lola_start=[row["start_lo"], row["start_la"]],
+                lola_end=[row["end_lo"], row["end_la"]],
+                conductor=conductor_constants,
+            )
+        )
+    logger.info("Loaded %d spans", len(spans))
 
-    ##
-    weather_data = get_weather_data(spans_dict)
+    # sample weather points (original code queried every 10 points)
+    # ensure we query same ordering as the original code: sample every WEATHER_SAMPLE_STEP
+    points = [(float(r["mid_la"]), float(r["mid_lo"])) for _, r in df_spans.iterrows()]
 
-    weather_data_lalo = np.array([[x['latitude'], x['longitude'], ] for x in weather_data])
-    weather_data_time = np.array([pd.Timestamp(x, tz='UTC') for x in weather_data[0]['hourly']['time']])
-    temperature_80m = np.array([x['hourly']['temperature_80m'] for x in weather_data])
-    wind_speed_80m = np.array([x['hourly']['wind_speed_80m'] for x in weather_data]) * 1000 / 3600
-    wind_direction_80m = np.array([x['hourly']['wind_direction_80m'] for x in weather_data])
+    # fetch weather for sampled points
+    logger.info("Fetching weather for %d sampled points (step=%d)", len(points) // WEATHER_SAMPLE_STEP + 1, WEATHER_SAMPLE_STEP)
+    weather_jsons = get_weather_data_for_points(points, sample_step=WEATHER_SAMPLE_STEP)
 
-    ##
-    data_to_keep = weather_data_time >= now_utc
-    weather_data_time = weather_data_time[data_to_keep]
-    temperature_80m = temperature_80m[:, data_to_keep]
-    wind_speed_80m = wind_speed_80m[:, data_to_keep]
-    wind_direction_80m = wind_direction_80m[:, data_to_keep]
+    # Convert weather responses to arrays (assumes all responses share same hours list)
+    # create arrays: locations x hours
+    # build arrays safely (handle small count and ensure shapes match)
+    if len(weather_jsons) == 0:
+        raise RuntimeError("No weather data fetched")
 
-    ##
-    # maps weather data to spans and computes ratings
-    ratings_span = []
+    # extract coordinate pairs for each weather result
+    weather_coords = np.array([[w["latitude"], w["longitude"]] for w in weather_jsons], dtype=float)
+
+    # times (pandas UTC timestamps)
+    time_index = pd.DatetimeIndex([pd.Timestamp(t, tz="UTC") for t in weather_jsons[0]["hourly"]["time"]])
+    # convert arrays
+    temperature_80m = np.vstack([w["hourly"]["temperature_80m"] for w in weather_jsons])
+    wind_speed_80m = np.vstack([w["hourly"]["wind_speed_80m"] for w in weather_jsons])
+    wind_direction_80m = np.vstack([w["hourly"]["wind_direction_80m"] for w in weather_jsons])
+
+    # wind speed conversion from km/h to m/s
+    wind_speed_80m = wind_speed_80m * 1000.0 / 3600.0
+
+    # restrict to times >= now_utc
+    keep_mask = time_index >= now_utc
+    if not keep_mask.any():
+        logger.warning("No forecast times at or after now (%s). Using full forecast range.", now_utc)
+        keep_mask = np.ones(len(time_index), dtype=bool)
+
+    time_index = time_index[keep_mask]
+    temperature_80m = temperature_80m[:, keep_mask]
+    wind_speed_80m = wind_speed_80m[:, keep_mask]
+    wind_direction_80m = wind_direction_80m[:, keep_mask]
+
+    # Now associate weather points to spans and compute ratings
+    ratings_spans: List[RatingsSpan] = []
+    # Precompute weather coords as columns (lat, lon)
+    weather_lats = weather_coords[:, 0]
+    weather_lons = weather_coords[:, 1]
+
     for span in spans:
-        dist = np.sqrt((span.lat - weather_data_lalo[:, 0]) ** 2 + (span.lon - weather_data_lalo[:, 1]) ** 2)
-        idx = np.argmin(dist)
+        # compute euclidean distance in lat/lon space (approx — same as original)
+        dlat = span.lat - weather_lats
+        dlon = span.lon - weather_lons
+        dist = np.sqrt(dlat ** 2 + dlon ** 2)
+        idx = int(np.argmin(dist))
 
-        # lat, lon, elevation, time, temperature, wind_speed, wind_direction):
-        wr = WeatherRecord(spans[0].lat, spans[0].lon, 80.0, weather_data_time, temperature_80m[idx, :],
-                           wind_speed_80m[idx, :], wind_direction_80m[idx, :])
-        wr.incidence = np.mod(wind_direction_80m[idx, :] - span.azimuth, 360)
+        wr = WeatherRecord(
+            lat=float(span.lat),
+            lon=float(span.lon),
+            elevation=80.0,
+            time=time_index,
+            temperature=temperature_80m[idx, :].astype(float),
+            wind_speed=wind_speed_80m[idx, :].astype(float),
+            wind_direction=wind_direction_80m[idx, :].astype(float),
+        )
 
-        # ratings
-        nor, lte, ste = [], [], []
-        for i, _ in enumerate(wr.temperature):
-            nor.append(thermal_rating_steady_state(wr.temperature[i], wr.wind_speed[i], wr.incidence[i], 1000,
-                                                   span.conductor, RATINGS_TEMPS['nor'])[0])
-            lte.append(thermal_rating_steady_state(wr.temperature[i], wr.wind_speed[i], wr.incidence[i], 1000,
-                                                   span.conductor, RATINGS_TEMPS['lte'])[0])
-            ste.append(thermal_rating_steady_state(wr.temperature[i], wr.wind_speed[i], wr.incidence[i], 1000,
-                                                   span.conductor, RATINGS_TEMPS['ste'])[0])
+        wr.incidence = np.mod(wr.wind_direction - span.azimuth, 360.0)
 
-        nor = np.array(nor)
-        lte = np.array(lte)
-        ste = np.array(ste)
+        n_hours = wr.temperature.shape[0]
+        # preallocate rating arrays
+        nor = np.empty(n_hours, dtype=float)
+        lte = np.empty(n_hours, dtype=float)
+        ste = np.empty(n_hours, dtype=float)
 
-        rs = RatingsSpan(span, wr)
-        rs.ratings = {'nor': nor, 'lte': lte, 'ste': ste}
-        ratings_span.append(rs)
+        # compute ratings per hour (retain original sequential calls)
+        for i in range(n_hours):
+            T = float(wr.temperature[i])
+            ws = float(wr.wind_speed[i])
+            inc = float(wr.incidence[i])
+            # Note: thermal_rating_steady_state returns a sequence; keep [0] as original code did
+            nor[i] = float(thermal_rating_steady_state(T, ws, inc, 1000, span.conductor, RATINGS_TEMPS["nor"])[0])
+            lte[i] = float(thermal_rating_steady_state(T, ws, inc, 1000, span.conductor, RATINGS_TEMPS["lte"])[0])
+            ste[i] = float(thermal_rating_steady_state(T, ws, inc, 1000, span.conductor, RATINGS_TEMPS["ste"])[0])
 
-    ## prepares data output
-    ratings_line = pd.DataFrame()
-    ratings_line['time'] = wr.time
+        rs = RatingsSpan(span=span, weather_record=wr, ratings={"nor": nor, "lte": lte, "ste": ste})
+        ratings_spans.append(rs)
 
-    # ratings for the whole lines
-    rating_type = RATINGS_TEMPS.keys()
-    for rt in rating_type:
-        r = np.array([x.ratings[rt] for x in ratings_span])
+    # Convert lists to arrays (spans x hours)
+    def stack_rating(key: str) -> np.ndarray:
+        return np.vstack([rs.ratings[key] for rs in ratings_spans]) if ratings_spans else np.empty((0, 0))
+
+    nor_arr = stack_rating("nor")
+    lte_arr = stack_rating("lte")
+    ste_arr = stack_rating("ste")
+
+    wind_speed_arr = np.vstack([rs.weather_record.wind_speed for rs in ratings_spans]) if ratings_spans else np.empty((0, 0))
+    wind_direction_arr = np.vstack([rs.weather_record.wind_direction for rs in ratings_spans]) if ratings_spans else np.empty((0, 0))
+    temperature_arr = np.vstack([rs.weather_record.temperature for rs in ratings_spans]) if ratings_spans else np.empty((0, 0))
+
+    FORECAST_DIR.mkdir(parents=True, exist_ok=True)
+    npz_file = FORECAST_DIR / f"{now_utc.strftime('%Y_%m_%d_%H')}_allspans.npz"
+    np.savez(
+        npz_file,
+        time=time_index,
+        nor=nor_arr,
+        lte=lte_arr,
+        ste=ste_arr,
+        temperature=temperature_arr,
+        wind_speed=wind_speed_arr,
+        wind_direction=wind_direction_arr,
+    )
+    logger.info("Saved full spans NPZ to %s", npz_file)
+
+    # summarize per-hour minimum rating across spans and index-of-min (mle_idx)
+    rating_types = list(RATINGS_TEMPS.keys())
+    ratings_line = pd.DataFrame({"time": time_index})
+
+    for rt in rating_types:
+        r = np.vstack([rs.ratings[rt] for rs in ratings_spans])  # shape: spans x hours
+        # mle index (span index having minimum rating) and minimum rating (value)
         mle_idx = np.nanargmin(r, axis=0)
         mle_rating = np.nanmin(r, axis=0)
-        col_name_rating = f'{rt}'
-        col_name_mle = f'{rt}_mle'
-        ratings_line[col_name_rating] = mle_rating
-        ratings_line[col_name_mle] = mle_idx
 
-    ## writes results
-    file_name = f'./forecasts/{now_utc.strftime("%Y_%m_%d_%H")}.csv'
-    ratings_line.to_csv(file_name, index=False, float_format='%.1f')
+        ratings_line[rt] = mle_rating
+        ratings_line[f"{rt}_mle"] = mle_idx
+
+    csv_file = FORECAST_DIR / f"{now_utc.strftime('%Y_%m_%d_%H')}.csv"
+    ratings_line.to_csv(csv_file, index=False, float_format="%.1f")
+    logger.info("Saved line summary CSV to %s", csv_file)
 
 
-if __name__ == '__main__':
-    run_dlr()
+if __name__ == "__main__":
+    run()

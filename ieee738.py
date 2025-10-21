@@ -139,7 +139,7 @@ def radiated_heat_loss(
     return (
             17.8
             * conductor.diameter
-            * conductor.emmisivity
+            * conductor.emissivity
             * (
                     ((conductor_temperature + 273) / 100) ** 4
                     - ((ambient_temperature + 273) / 100) ** 4
@@ -148,7 +148,7 @@ def radiated_heat_loss(
 
 
 def solar_heat_gain(solar_irradiation, conductor):
-    return conductor.absortivity * solar_irradiation * conductor.diameter
+    return conductor.absorptivity * solar_irradiation * conductor.diameter
 
 
 def thermal_rating_steady_state(ambient_temperature, wind_speed, angle_of_attack, solar_irradiation, conductor,
