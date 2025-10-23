@@ -187,7 +187,7 @@ app.index_string = """
 </html>
 """
 
-app.layout = html.Div([
+app.layout = lambda: html.Div([
     dbc.Container([
         html.H4(
             f"Forecasted Normal Ratings for 150 kV Corgas–Falagueira line from {time.iloc[0]} to {time.iloc[-1]}",
@@ -249,6 +249,8 @@ def update_plots(clickData):
     idx = np.argmin(np.abs(x_val - time))
     return plot_map(idx), plot_ts(idx)
 
+
+server = app.server
 
 # =========================================================
 # --- Run ---
