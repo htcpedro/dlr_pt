@@ -187,7 +187,7 @@ app.index_string = """
 </html>
 """
 
-app.layout = lambda: html.Div([
+app.layout = html.Div([
     dbc.Container([
         html.H4(
             f"Forecasted Normal Ratings for 150 kV Corgas–Falagueira line from {time.iloc[0]} to {time.iloc[-1]}",
@@ -199,7 +199,7 @@ app.layout = lambda: html.Div([
                 dcc.Graph(
                     id='ts-plot',
                     figure=plot_ts(0),
-                    style={"height": "40vh"}   # Top graph: 40% of viewport height
+                    style={"height": "40vh"}  # Top graph: 40% of viewport height
                 )
             ], md=12)
         ]),
@@ -207,7 +207,7 @@ app.layout = lambda: html.Div([
             dbc.Col([
                 dcc.Graph(
                     figure=plot_bar(),
-                    style={"height": "50vh"}   # Bar chart: 40% height
+                    style={"height": "50vh"}  # Bar chart: 40% height
                 )
             ], md=6),
 
@@ -227,6 +227,12 @@ app.layout = lambda: html.Div([
     ],
         fluid=True,
         style={"height": "100vh", "overflow": "hidden"}  # Keep container full screen, no scroll
+    ),
+    dcc.Location(id="url"),  # manages the browser location
+    dcc.Interval(
+        id="refresh-page",
+        interval=60 *60 * 1000,  # 1 hour in milliseconds
+        n_intervals=0
     )
 ])
 
@@ -234,6 +240,16 @@ app.layout = lambda: html.Div([
 # =========================================================
 # --- Callbacks ---
 # =========================================================
+@app.callback(
+    Output("url", "href"),
+    Input("refresh-page", "n_intervals"),
+    prevent_initial_call=True
+)
+def refresh_page(n):
+    # return the current URL to trigger a full reload
+    return "/"
+
+
 @app.callback(
     Output("map", "figure"),
     Output("ts-plot", "figure"),
@@ -257,4 +273,3 @@ server = app.server
 # =========================================================
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8050)
-
